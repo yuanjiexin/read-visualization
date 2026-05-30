@@ -1,0 +1,76 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Space Grotesk", "Inter", system-ui, sans-serif;
+  --font-serif: "Playfair Display", "EB Garamond", Georgia, serif;
+  --font-mono: "JetBrains Mono", "Fira Code", monospace;
+
+  /* Ink & Paper vintage color schemes mapped to Clean Minimalism */
+  --color-ink-dark: #2C2C26;
+  --color-ink-accent: #2C2C26;
+  --color-paper-base: #FAF9F6;
+  --color-paper-grid: rgba(44, 44, 38, 0.05);
+}
+
+/* Custom layout behaviors & pencil sketches micro-animations */
+@layer utilities {
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    height: 4px;
+    width: 4px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: #d0c6af;
+    border-radius: 9999px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+}
+
+/* Douyin Swipe Heart Float Animation */
+@keyframes float-heart {
+  0% {
+    transform: translate(-50%, -50%) scale(0.6) rotate(0deg);
+    opacity: 0.9;
+  }
+  40% {
+    transform: translate(-50%, -80px) scale(1.1) rotate(-15deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -180px) scale(0.8) rotate(15deg);
+    opacity: 0;
+  }
+}
+
+.animate-float-heart {
+  animation: float-heart 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes ping-once {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 0;
+  }
+}
+
+.animate-ping-once {
+  animation: ping-once 0.4s ease-out forwards;
+}
