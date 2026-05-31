@@ -5,7 +5,7 @@
 
 import { useMemo, useState } from "react";
 import { WeReadHighlight, WeReadNotebook } from "../types";
-import { Layers, MapPin, Download, RefreshCw } from "lucide-react";
+import { Layers, MapPin, Download } from "lucide-react";
 import BookCover from "./BookCover";
 import { toPng } from "html-to-image";
 
@@ -200,11 +200,11 @@ export default function CognitiveLandscape({ notebooks, highlights = [], onReana
 
   return (
     <div 
-      className="p-8 bg-white/40 backdrop-blur-md border border-[#2C2C26]/10 rounded-xl shadow-xs w-full min-h-[500px] font-sans text-[#2C2C26] select-none relative"
+      className="module-surface-shadow p-8 bg-white/52 backdrop-blur-md border border-[#2C2C26]/8 rounded-xl w-full min-h-[500px] font-sans text-[#2C2C26] select-none relative"
       id="cognitive-landscape-container"
     >
       {/* Header */}
-      <div className="relative min-h-[180px] border-b border-[#2C2C26]/62 mb-8">
+      <div className="relative min-h-[180px] border-b border-[#2C2C26]/62">
         <div className="absolute left-0 top-0 flex items-center gap-2 font-sans text-sm font-semibold uppercase tracking-widest text-[#2C2C26]/72">
           <Layers className="h-4 w-4" />
           Depth Salon
@@ -213,7 +213,7 @@ export default function CognitiveLandscape({ notebooks, highlights = [], onReana
           <h2 className="font-serif text-[88px] font-normal leading-none tracking-normal text-[#2C2C26]">
             阅读深度
           </h2>
-          <p className="-mt-8 font-serif text-[76px] font-normal uppercase leading-none tracking-normal text-[#2C2C26]/55">
+          <p className="-mt-8 font-serif text-[76px] font-normal uppercase leading-none tracking-normal text-[#2C2C26]/34">
             DEPTH
           </p>
           <p className="mt-5 text-[12px] font-semibold text-[#2C2C26]/52 uppercase tracking-[0.42em] font-sans">
@@ -221,30 +221,19 @@ export default function CognitiveLandscape({ notebooks, highlights = [], onReana
           </p>
         </div>
         <div className="absolute right-0 top-0 flex items-center gap-3">
-          {onReanalyze && (
-            <button
-              onClick={onReanalyze}
-              disabled={isAnalyzing}
-              className="download-btn flex items-center gap-1.5 px-2.5 py-1.5 bg-white hover:bg-[#2C2C26]/5 border border-[#2C2C26]/20 hover:border-[#2C2C26]/40 rounded text-[10px] text-[#2C2C26] font-mono shadow-3xs cursor-pointer transition-all animate-fade-in disabled:opacity-50"
-              title="调用分析模型重新生成全部图谱内容"
-            >
-              <RefreshCw className={`w-3.5 h-3.5 text-[#2C2C26]/70 ${isAnalyzing ? "animate-spin" : ""}`} />
-              <span>{isAnalyzing ? "分析中" : "重新分析"}</span>
-            </button>
-          )}
           <button
             onClick={handleDownload}
-            className="download-btn flex items-center gap-1.5 px-2.5 py-1.5 bg-white hover:bg-[#2C2C26]/5 border border-[#2C2C26]/20 hover:border-[#2C2C26]/40 rounded text-[10px] text-[#2C2C26] font-mono shadow-3xs cursor-pointer transition-all animate-fade-in"
+            className="download-btn flex items-center gap-2 px-4 py-2.5 bg-white/78 hover:bg-[#2C2C26]/5 border border-[#2C2C26]/20 hover:border-[#2C2C26]/40 rounded text-[11px] text-[#2C2C26] font-mono shadow-3xs cursor-pointer transition-all animate-fade-in"
             title="保存为 PNG 图片到本地"
           >
-            <Download className="w-3.5 h-3.5 text-[#2C2C26]/70" />
+            <Download className="w-4 h-4 text-[#2C2C26]/70" />
             <span>保存深度图</span>
           </button>
         </div>
       </div>
 
       {/* The Map Sheet (Thematic Islands in a grid) */}
-      <div className="grid grid-cols-12 gap-6 relative">
+      <div className="grid grid-cols-12 gap-10 pt-12 relative">
         {visibleCategories.length === 0 ? (
           <div className="col-span-12 min-h-[320px] border border-dashed border-[#2C2C26]/12 rounded-lg bg-white/50 flex flex-col items-center justify-center text-center px-8">
             <p className="font-serif text-lg text-[#2C2C26]">某类型下阅读书籍超过3本展示</p>
@@ -253,11 +242,11 @@ export default function CognitiveLandscape({ notebooks, highlights = [], onReana
             </p>
           </div>
         ) : (
-        <div className="col-span-12 flex flex-col gap-6">
+        <div className="col-span-12 flex flex-col gap-10">
           {categoryRows.map((row, rowIndex) => (
             <div
               key={`depth-row-${rowIndex}`}
-              className="grid gap-6"
+              className="grid gap-10"
               style={{
                 gridTemplateColumns: visibleCategories.length < 4
                   ? `repeat(${Math.max(1, row.length)}, minmax(0, 1fr))`
@@ -281,7 +270,7 @@ export default function CognitiveLandscape({ notebooks, highlights = [], onReana
             return (
               <div 
                 key={cat} 
-                className="bg-white border border-[#2C2C26]/10 rounded-lg p-5 shadow-3xs relative flex flex-col items-center justify-between overflow-hidden min-h-[560px]"
+                className="module-card-shadow bg-white border border-[#2C2C26]/10 rounded-lg p-5 relative flex flex-col items-center justify-between overflow-hidden min-h-[560px]"
               >
                 {/* Island background contours in SVG */}
                 <div className="w-full max-w-[520px] aspect-square relative flex items-center justify-center p-1 border border-[#2C2C26]/5 rounded-full mt-2 bg-[#FAF9F6]/50">
@@ -387,8 +376,8 @@ export default function CognitiveLandscape({ notebooks, highlights = [], onReana
                 </div>
 
                 {/* Island description */}
-                <div className="text-center mt-3 z-10 font-sans">
-                  <span className="font-serif font-normal text-2xl text-[#2C2C26] tracking-normal block">
+                <div className="text-center mt-8 z-10 font-sans">
+                  <span className="font-serif text-[30px] font-semibold leading-none text-[#2C2C26] tracking-normal block">
                     {cat}
                   </span>
                   <span className="text-[8px] font-mono text-[#2C2C26]/50 tracking-widest uppercase block mt-0.5">

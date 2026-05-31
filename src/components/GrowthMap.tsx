@@ -5,7 +5,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { WeReadNotebook } from "../types";
-import { BookOpen, Calendar, Download, RefreshCw, Sparkles } from "lucide-react";
+import { BookOpen, Calendar, Download, RefreshCw } from "lucide-react";
 import BookCover from "./BookCover";
 import { toPng } from "html-to-image";
 import { getNotebookTimeInfo } from "../utils/wereadDates";
@@ -241,10 +241,10 @@ export default function GrowthMap({ notebooks, yearlyPersonality, isAiGenerated,
 
   return (
     <div 
-      className="w-[2300px] select-none relative overflow-hidden rounded-xl border border-[#2C2C26]/10 bg-white/40 px-18 py-14 font-sans text-[#2C2C26] shadow-xs backdrop-blur-md" 
+      className="module-surface-shadow w-[2300px] select-none relative overflow-hidden rounded-xl border border-[#2C2C26]/8 bg-white/52 px-18 py-14 font-sans text-[#2C2C26] backdrop-blur-md" 
       id="growth-map-container"
     >
-      <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(90deg,rgba(44,44,38,0.035)_1px,transparent_1px),linear-gradient(180deg,rgba(44,44,38,0.03)_1px,transparent_1px)] bg-[size:58px_58px] opacity-55"></div>
+      <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(90deg,rgba(44,44,38,0.018)_1px,transparent_1px),linear-gradient(180deg,rgba(44,44,38,0.016)_1px,transparent_1px)] bg-[size:58px_58px] opacity-45"></div>
 
       <div className="relative z-10">
         {/* Poster header */}
@@ -257,19 +257,19 @@ export default function GrowthMap({ notebooks, yearlyPersonality, isAiGenerated,
               <button
                 onClick={onReanalyze}
                 disabled={isAnalyzing}
-                className="download-btn flex items-center gap-1.5 border border-[#2C2C26]/20 bg-white/70 px-3 py-2 text-[10px] text-[#2C2C26] font-mono shadow-3xs cursor-pointer transition-all hover:bg-[#2C2C26]/5 disabled:opacity-50"
+                className="download-btn flex items-center gap-2 border border-[#2C2C26]/20 bg-white/78 px-4 py-2.5 text-[11px] text-[#2C2C26] font-mono shadow-3xs cursor-pointer transition-all hover:bg-[#2C2C26]/5 disabled:opacity-50"
                 title="调用分析模型重新生成全部图谱内容"
               >
-                <RefreshCw className={`w-3.5 h-3.5 text-[#2C2C26]/70 ${isAnalyzing ? "animate-spin" : ""}`} />
+                <RefreshCw className={`w-4 h-4 text-[#2C2C26]/70 ${isAnalyzing ? "animate-spin" : ""}`} />
                 <span>{isAnalyzing ? "分析中" : "重新分析"}</span>
               </button>
             )}
             <button
               onClick={handleDownload}
-              className="download-btn flex items-center gap-1.5 border border-[#2C2C26]/20 bg-white/70 px-3 py-2 text-[10px] text-[#2C2C26] font-mono shadow-3xs cursor-pointer transition-all hover:bg-[#2C2C26]/5"
+              className="download-btn flex items-center gap-2 border border-[#2C2C26]/20 bg-white/78 px-4 py-2.5 text-[11px] text-[#2C2C26] font-mono shadow-3xs cursor-pointer transition-all hover:bg-[#2C2C26]/5"
               title="保存为 PNG 图片到本地"
             >
-              <Download className="w-3.5 h-3.5 text-[#2C2C26]/70" />
+              <Download className="w-4 h-4 text-[#2C2C26]/70" />
               <span>保存图谱</span>
             </button>
           </div>
@@ -277,7 +277,7 @@ export default function GrowthMap({ notebooks, yearlyPersonality, isAiGenerated,
             <div className="font-serif text-[88px] font-normal uppercase leading-none tracking-normal text-[#2C2C26]">
               阅读性格
             </div>
-            <div className="-mt-8 font-serif text-[76px] font-normal uppercase leading-none tracking-normal text-[#2C2C26]/55">
+            <div className="-mt-8 font-serif text-[76px] font-normal uppercase leading-none tracking-normal text-[#2C2C26]/34">
               PERSONALITY
             </div>
             <p className="mt-5 font-sans text-[12px] font-semibold uppercase tracking-[0.42em] text-[#2C2C26]/52">
@@ -308,8 +308,8 @@ export default function GrowthMap({ notebooks, yearlyPersonality, isAiGenerated,
                 className="grid grid-cols-12 gap-16 border-b border-[#2C2C26]/62 py-18 animate-in fade-in slide-in-from-left-4 duration-300"
                 style={{ animationDelay: `${idx * 150}ms` }}
               >
-                <aside className="col-span-3 flex min-h-[360px] flex-col justify-between">
-                  <div>
+                <aside className="col-span-3 flex min-h-[360px] flex-col items-center justify-between text-center">
+                  <div className="flex w-full max-w-[360px] flex-col items-center">
                     <div className="font-serif text-[64px] font-normal leading-none tracking-normal text-[#2C2C26]">
                       {year}
                     </div>
@@ -327,14 +327,8 @@ export default function GrowthMap({ notebooks, yearlyPersonality, isAiGenerated,
                     <p className="mt-12 max-w-[320px] font-serif text-sm uppercase leading-6 text-[#2C2C26]/82">
                       {personality.description}
                     </p>
-                    {(personality.visualArchetype || personality.artPersona) && (
-                      <div className="mt-9 flex max-w-[320px] items-center gap-2 border-t border-[#2C2C26]/54 pt-5 text-xs font-sans font-semibold uppercase tracking-widest text-[#2C2C26]/72">
-                        <Sparkles className="h-4 w-4" />
-                        <span>{[personality.visualArchetype, personality.artPersona].filter(Boolean).join(" / ")}</span>
-                      </div>
-                    )}
                   </div>
-                  <div className="mt-12 max-w-[320px] border-y border-[#2C2C26]/60 py-4 text-center font-sans text-xl font-semibold tracking-wide">
+                  <div className="mt-12 w-full max-w-[320px] border-y border-[#2C2C26]/60 py-4 text-center font-sans text-xl font-semibold tracking-wide">
                     {yearBooks.length} Books
                   </div>
                 </aside>

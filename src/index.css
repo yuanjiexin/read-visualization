@@ -42,8 +42,15 @@
 
   .module-surface-shadow {
     box-shadow:
-      0 18px 42px rgba(44, 44, 38, 0.09),
-      0 3px 10px rgba(44, 44, 38, 0.045);
+      0 30px 70px rgba(44, 44, 38, 0.13),
+      0 8px 24px rgba(44, 44, 38, 0.07),
+      inset 0 1px 0 rgba(255, 255, 255, 0.74);
+  }
+
+  .module-card-shadow {
+    box-shadow:
+      0 18px 38px rgba(44, 44, 38, 0.09),
+      0 3px 12px rgba(44, 44, 38, 0.045);
   }
 }
 

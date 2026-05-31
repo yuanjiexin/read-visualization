@@ -4,7 +4,7 @@
  */
 
 import { useState, useRef, useEffect } from "react";
-import { Compass, Download, RefreshCw } from "lucide-react";
+import { Compass, Download } from "lucide-react";
 import { toPng } from "html-to-image";
 import { WeReadHighlight, WeReadNotebook } from "../types";
 import BookCover from "./BookCover";
@@ -103,15 +103,15 @@ const CATEGORY_COLUMNS = [
   },
 ];
 
-const CHART_TOP = 92;
+const CHART_TOP = 128;
 const CHART_BOTTOM_PADDING = 56;
 const GROWTH_YEAR_BLOCK_HEIGHT = 220;
 const GROWTH_YEAR_GAP = 48;
 const GROWTH_FIXED_HEIGHT = 188;
 
 function getChartMetrics(containerWidth: number) {
-  const chartLeft = Math.max(170, Math.round(containerWidth * 0.1));
-  const chartRight = Math.max(95, Math.round(containerWidth * 0.056));
+  const chartLeft = Math.max(220, Math.round(containerWidth * 0.13));
+  const chartRight = Math.max(125, Math.round(containerWidth * 0.074));
   const chartWidth = containerWidth - chartLeft - chartRight;
   const categoryStep = chartWidth / (CATEGORY_COLUMNS.length - 1);
   return { chartLeft, chartRight, chartWidth, categoryStep };
@@ -303,10 +303,10 @@ export default function RelationshipMap({ notebooks, highlights, onReanalyze, is
   return (
     <div
       ref={containerRef}
-      className="p-8 bg-white/40 backdrop-blur-md border border-[#2C2C26]/10 rounded-xl shadow-xs w-[1700px] min-h-[980px] h-full font-sans text-[#2C2C26] select-none relative flex flex-col"
+      className="module-surface-shadow p-8 bg-white/52 backdrop-blur-md border border-[#2C2C26]/8 rounded-xl w-[1700px] min-h-[980px] h-full font-sans text-[#2C2C26] select-none relative flex flex-col"
       id="relationship-map-container"
     >
-      <div className="relative min-h-[180px] border-b border-[#2C2C26]/62 mb-8 flex-shrink-0">
+      <div className="relative min-h-[180px] border-b border-[#2C2C26]/62 flex-shrink-0">
         <div className="absolute left-0 top-0 flex items-center gap-2 font-sans text-sm font-semibold uppercase tracking-widest text-[#2C2C26]/72">
           <Compass className="h-4 w-4" />
           Journey Atlas
@@ -315,7 +315,7 @@ export default function RelationshipMap({ notebooks, highlights, onReanalyze, is
           <h2 className="font-serif text-[88px] font-normal leading-none tracking-normal text-[#2C2C26]">
             阅读演化
           </h2>
-          <p className="-mt-8 font-serif text-[76px] font-normal uppercase leading-none tracking-normal text-[#2C2C26]/55">
+          <p className="-mt-8 font-serif text-[76px] font-normal uppercase leading-none tracking-normal text-[#2C2C26]/34">
             EVOLUTION
           </p>
           <p className="mt-5 text-[12px] font-semibold text-[#2C2C26]/52 uppercase tracking-[0.42em] font-sans">
@@ -324,29 +324,18 @@ export default function RelationshipMap({ notebooks, highlights, onReanalyze, is
         </div>
 
         <div className="absolute right-0 top-0 flex items-center gap-3">
-          {onReanalyze && (
-            <button
-              onClick={onReanalyze}
-              disabled={isAnalyzing}
-              className="download-btn flex items-center gap-1.5 px-2.5 py-1.5 bg-white hover:bg-[#2C2C26]/5 border border-[#2C2C26]/20 hover:border-[#2C2C26]/40 rounded text-[10px] text-[#2C2C26] font-mono shadow-3xs cursor-pointer transition-all disabled:opacity-50"
-              title="调用分析模型重新生成全部图谱内容"
-            >
-              <RefreshCw className={`w-3.5 h-3.5 text-[#2C2C26]/70 ${isAnalyzing ? "animate-spin" : ""}`} />
-              <span>{isAnalyzing ? "分析中" : "重新分析"}</span>
-            </button>
-          )}
           <button
             onClick={handleDownload}
-            className="download-btn flex items-center gap-1.5 px-2.5 py-1.5 bg-white hover:bg-[#2C2C26]/5 border border-[#2C2C26]/20 hover:border-[#2C2C26]/40 rounded text-[10px] text-[#2C2C26] font-mono shadow-3xs cursor-pointer transition-all"
+            className="download-btn flex items-center gap-2 px-4 py-2.5 bg-white/78 hover:bg-[#2C2C26]/5 border border-[#2C2C26]/20 hover:border-[#2C2C26]/40 rounded text-[11px] text-[#2C2C26] font-mono shadow-3xs cursor-pointer transition-all"
             title="保存为 PNG 图片到本地"
           >
-            <Download className="w-3.5 h-3.5 text-[#2C2C26]/70" />
+            <Download className="w-4 h-4 text-[#2C2C26]/70" />
             <span>保存图谱</span>
           </button>
         </div>
       </div>
 
-      <div ref={chartAreaRef} className="relative flex-1 min-h-0">
+      <div ref={chartAreaRef} className="relative mt-12 flex-1 min-h-0">
         <svg ref={svgRef} className="absolute left-0 top-0 w-full h-full" viewBox={`0 0 ${svgWidth} ${containerHeight}`}>
           <defs>
             <marker id="journey-arrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
@@ -359,8 +348,8 @@ export default function RelationshipMap({ notebooks, highlights, onReanalyze, is
             return (
               <g key={`column-${category.label}`}>
                 <line x1={x} y1={CHART_TOP - 12} x2={x} y2={CHART_TOP + chartHeight - 8} stroke="rgba(44,44,38,0.10)" strokeWidth="1" strokeDasharray="2 4" />
-                <text x={x} y={CHART_TOP - 52} textAnchor="middle" className="font-serif" fontSize="16" fill="#2C2C26">{category.label}</text>
-                <text x={x} y={CHART_TOP - 36} textAnchor="middle" className="font-mono" fontSize="9" fill="rgba(44,44,38,0.55)" letterSpacing="0.08em">{category.subtitle}</text>
+                <text x={x} y={CHART_TOP - 78} textAnchor="middle" className="font-serif" fontSize="28" fontWeight="600" fill="#2C2C26">{category.label}</text>
+                <text x={x} y={CHART_TOP - 52} textAnchor="middle" className="font-mono" fontSize="10" fill="rgba(44,44,38,0.48)" letterSpacing="0.08em">{category.subtitle}</text>
               </g>
             );
           })}
@@ -369,13 +358,13 @@ export default function RelationshipMap({ notebooks, highlights, onReanalyze, is
             const y = CHART_TOP + index * rowHeight;
             return (
               <g key={`year-${year}`}>
-                <line x1={chartLeft - 100} x2={svgWidth - chartRight} y1={y} y2={y} stroke="rgba(44,44,38,0.09)" strokeWidth="1" />
-                <text x={Math.max(10, chartLeft - 128)} y={y + rowHeight * 0.45} className="font-serif" fontSize="24" fill="#2C2C26">{year}</text>
-                <text x={Math.max(10, chartLeft - 128)} y={y + rowHeight * 0.45 + 18} className="font-mono" fontSize="10" fill="rgba(44,44,38,0.52)">1月-12月</text>
+                <line x1={chartLeft - 128} x2={svgWidth - chartRight} y1={y} y2={y} stroke="rgba(44,44,38,0.09)" strokeWidth="1" />
+                <text x={Math.max(10, chartLeft - 168)} y={y + rowHeight * 0.48} className="font-serif" fontSize="38" fontWeight="600" fill="#2C2C26">{year}</text>
+                <text x={Math.max(10, chartLeft - 168)} y={y + rowHeight * 0.48 + 26} className="font-mono" fontSize="10" fill="rgba(44,44,38,0.48)">1月-12月</text>
               </g>
             );
           })}
-          <line x1={chartLeft - 100} x2={svgWidth - chartRight} y1={CHART_TOP + chartHeight} y2={CHART_TOP + chartHeight} stroke="rgba(44,44,38,0.09)" strokeWidth="1" />
+          <line x1={chartLeft - 128} x2={svgWidth - chartRight} y1={CHART_TOP + chartHeight} y2={CHART_TOP + chartHeight} stroke="rgba(44,44,38,0.09)" strokeWidth="1" />
 
           {categoryGroups.map((items, groupIndex) => (
             <g key={`genre-flow-${groupIndex}`}>
@@ -458,8 +447,8 @@ export default function RelationshipMap({ notebooks, highlights, onReanalyze, is
             })
           )}
 
-          <line x1={chartLeft - 100} x2={svgWidth - chartRight} y1={CHART_TOP + chartHeight + 34} y2={CHART_TOP + chartHeight + 34} stroke="rgba(44,44,38,0.10)" strokeWidth="1" />
-          <text x={chartLeft - 100} y={CHART_TOP + chartHeight + 52} className="font-mono" fontSize="9" fill="rgba(44,44,38,0.40)" letterSpacing="0.08em">节点大小：阅读时间与划线数量 · 黑色实线：阅读先后 · 浅色虚线：同分类轨迹</text>
+          <line x1={chartLeft - 128} x2={svgWidth - chartRight} y1={CHART_TOP + chartHeight + 34} y2={CHART_TOP + chartHeight + 34} stroke="rgba(44,44,38,0.10)" strokeWidth="1" />
+          <text x={chartLeft - 128} y={CHART_TOP + chartHeight + 52} className="font-mono" fontSize="9" fill="rgba(44,44,38,0.40)" letterSpacing="0.08em">节点大小：阅读时间与划线数量 · 黑色实线：阅读先后 · 浅色虚线：同分类轨迹</text>
           <text x={svgWidth - chartRight} y={CHART_TOP + chartHeight + 52} textAnchor="end" className="font-mono" fontSize="9" fill="rgba(44,44,38,0.40)" letterSpacing="0.08em">© WeChat Reading 阅读演化</text>
         </svg>
 

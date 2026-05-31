@@ -232,8 +232,8 @@ export default function InfiniteCanvas({ children, onBlankClick }: InfiniteCanva
       }`}
       style={{
         backgroundImage: `
-          linear-gradient(to right, rgba(44, 44, 38, 0.05) 1px, transparent 1px),
-          linear-gradient(to bottom, rgba(44, 44, 38, 0.05) 1px, transparent 1px)
+          linear-gradient(to right, rgba(44, 44, 38, 0.026) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(44, 44, 38, 0.026) 1px, transparent 1px)
         `,
         backgroundSize: "28px 28px",
       }}
