@@ -456,14 +456,16 @@ export default function RelationshipMap({ notebooks, highlights, onReanalyze, is
           const area = chartAreaRef.current;
           if (!area) return null;
           const rect = area.getBoundingClientRect();
-          const localX = hoveredBook.mouseX - rect.left;
-          const localY = hoveredBook.mouseY - rect.top;
+          const scaleX = rect.width / area.offsetWidth || 1;
+          const scaleY = rect.height / area.offsetHeight || 1;
+          const localX = (hoveredBook.mouseX - rect.left) / scaleX;
+          const localY = (hoveredBook.mouseY - rect.top) / scaleY;
           return (
           <div
             className="absolute z-30 w-[330px] rounded-lg border border-[#2C2C26]/15 bg-white/95 backdrop-blur-md p-3 shadow-2xs pointer-events-none"
             style={{
-              left: Math.max(8, Math.min(localX + 18, rect.width - 350)),
-              top: Math.max(8, Math.min(localY + 18, rect.height - 130)),
+              left: Math.max(8, Math.min(localX + 18, area.offsetWidth - 350)),
+              top: Math.max(8, Math.min(localY + 18, area.offsetHeight - 130)),
             }}
           >
             <div className="flex gap-3">

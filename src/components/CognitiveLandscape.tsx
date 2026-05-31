@@ -29,7 +29,23 @@ type HoveredDepthBook = DepthBook & {
   categoryTitle: string;
   x: number;
   y: number;
+  popupX: number;
+  popupY: number;
+  popupWidth: number;
+  popupHeight: number;
 };
+
+function getScaledLocalPoint(container: HTMLElement, clientX: number, clientY: number) {
+  const rect = container.getBoundingClientRect();
+  const scaleX = rect.width / container.offsetWidth || 1;
+  const scaleY = rect.height / container.offsetHeight || 1;
+  return {
+    popupX: (clientX - rect.left) / scaleX,
+    popupY: (clientY - rect.top) / scaleY,
+    popupWidth: container.offsetWidth,
+    popupHeight: container.offsetHeight,
+  };
+}
 
 export default function CognitiveLandscape({ notebooks, highlights = [], onReanalyze, isAnalyzing }: CognitiveLandscapeProps) {
   const [hoveredBook, setHoveredBook] = useState<HoveredDepthBook | null>(null);
@@ -297,9 +313,26 @@ export default function CognitiveLandscape({ notebooks, highlights = [], onReana
                     return (
                       <button
                         key={nb.bookId}
-                        onMouseEnter={() => setHoveredBook({ ...nb, categoryTitle: cat, x, y })}
+                        onMouseEnter={(event) => {
+                          const container = event.currentTarget.parentElement;
+                          if (!container) return;
+                          setHoveredBook({ ...nb, categoryTitle: cat, x, y, ...getScaledLocalPoint(container, event.clientX, event.clientY) });
+                        }}
+                        onMouseMove={(event) => {
+                          const container = event.currentTarget.parentElement;
+                          if (!container) return;
+                          setHoveredBook((current) => (
+                            current?.bookId === nb.bookId
+                              ? { ...current, ...getScaledLocalPoint(container, event.clientX, event.clientY) }
+                              : current
+                          ));
+                        }}
                         onMouseLeave={() => setHoveredBook(null)}
-                        onClick={() => setHoveredBook({ ...nb, categoryTitle: cat, x, y })}
+                        onClick={(event) => {
+                          const container = event.currentTarget.parentElement;
+                          if (!container) return;
+                          setHoveredBook({ ...nb, categoryTitle: cat, x, y, ...getScaledLocalPoint(container, event.clientX, event.clientY) });
+                        }}
                         className={`absolute w-9 h-9 rounded-full cursor-pointer transition-all duration-300 flex items-center justify-center ${
                           isHovered
                             ? "z-30 ring-4 ring-[#2C2C26]/20"
@@ -333,10 +366,8 @@ export default function CognitiveLandscape({ notebooks, highlights = [], onReana
                     <div
                       className="absolute z-40 w-[330px] rounded-lg border border-[#2C2C26]/15 bg-white/95 backdrop-blur-md p-3 shadow-2xs pointer-events-none font-sans text-[#2C2C26]"
                       style={{
-                        left: hoveredBook.x < 52 ? `${hoveredBook.x + 5}%` : undefined,
-                        right: hoveredBook.x >= 52 ? `${100 - hoveredBook.x + 5}%` : undefined,
-                        top: hoveredBook.y < 58 ? `${hoveredBook.y + 5}%` : undefined,
-                        bottom: hoveredBook.y >= 58 ? `${100 - hoveredBook.y + 5}%` : undefined,
+                        left: Math.max(8, Math.min(hoveredBook.popupX + 18, hoveredBook.popupWidth - 350)),
+                        top: Math.max(8, Math.min(hoveredBook.popupY + 18, hoveredBook.popupHeight - 140)),
                       }}
                     >
                       <div className="flex gap-3">
