@@ -364,14 +364,14 @@ export default function CognitiveLandscape({ notebooks, highlights = [], onReana
 
                   {hoveredBook?.categoryTitle === cat && (
                     <div
-                      className="absolute z-40 w-[330px] rounded-lg border border-[#2C2C26]/15 bg-white/95 backdrop-blur-md p-3 shadow-2xs pointer-events-none font-sans text-[#2C2C26]"
+                      className="absolute z-40 w-[460px] rounded-xl border border-[#2C2C26]/15 bg-white/95 backdrop-blur-md p-5 shadow-2xs pointer-events-none font-sans text-[#2C2C26]"
                       style={{
-                        left: Math.max(8, Math.min(hoveredBook.popupX + 18, hoveredBook.popupWidth - 350)),
-                        top: Math.max(8, Math.min(hoveredBook.popupY + 18, hoveredBook.popupHeight - 140)),
+                        left: Math.max(8, Math.min(hoveredBook.popupX + 22, hoveredBook.popupWidth - 485)),
+                        top: Math.max(8, Math.min(hoveredBook.popupY + 22, hoveredBook.popupHeight - 190)),
                       }}
                     >
-                      <div className="flex gap-3">
-                        <div className="w-16 h-22 flex-shrink-0 overflow-hidden rounded border border-[#2C2C26]/10 bg-[#FAF9F6]">
+                      <div className="flex gap-5">
+                        <div className="h-34 w-24 flex-shrink-0 overflow-hidden rounded-md border border-[#2C2C26]/10 bg-[#FAF9F6]">
                           <BookCover
                             url={hoveredBook.book.cover}
                             title={hoveredBook.book.title}
@@ -381,24 +381,24 @@ export default function CognitiveLandscape({ notebooks, highlights = [], onReana
                           />
                         </div>
                         <div className="min-w-0 flex-1">
-                          <p className="font-serif text-sm leading-tight text-[#2C2C26] line-clamp-2">
+                          <p className="font-serif text-xl leading-snug text-[#2C2C26] line-clamp-2">
                             {hoveredBook.book.title}
                           </p>
-                          <p className="mt-1 font-mono text-[9px] text-[#2C2C26]/48 truncate">
+                          <p className="mt-2 font-mono text-xs text-[#2C2C26]/52 truncate">
                             {hoveredBook.book.author?.replace(/\[.*?\]/g, "") || "佚名"} · {hoveredBook.categoryTitle}
                           </p>
-                          <div className="mt-3 grid grid-cols-2 gap-x-3 gap-y-1.5 text-[10px] text-[#2C2C26]/68">
+                          <div className="mt-5 grid grid-cols-2 gap-x-5 gap-y-2.5 text-sm text-[#2C2C26]/70">
                             <span className="flex items-center gap-1">
-                              <MapPin className="w-3 h-3 text-[#2C2C26]/50" />
+                              <MapPin className="h-4 w-4 text-[#2C2C26]/50" />
                               深度分数
                             </span>
                             <span className="text-right font-mono text-[#2C2C26]">{hoveredBook.depthScore}</span>
                             <span>完成度</span>
-                            <span className="text-right font-mono">{hoveredBook.completionScore}</span>
+                            <span className="text-right font-mono text-[#2C2C26]">{hoveredBook.completionScore}</span>
                             <span>阅读时间</span>
-                            <span className="text-right font-mono">{hoveredBook.readingTimeScore}h</span>
+                            <span className="text-right font-mono text-[#2C2C26]">{hoveredBook.readingTimeScore}h</span>
                             <span>划线 / 笔记</span>
-                            <span className="text-right font-mono">{hoveredBook.highlightCount} / {hoveredBook.noteScore}</span>
+                            <span className="text-right font-mono text-[#2C2C26]">{hoveredBook.highlightCount} / {hoveredBook.noteScore}</span>
                           </div>
                         </div>
                       </div>

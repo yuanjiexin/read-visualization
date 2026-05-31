@@ -462,14 +462,14 @@ export default function RelationshipMap({ notebooks, highlights, onReanalyze, is
           const localY = (hoveredBook.mouseY - rect.top) / scaleY;
           return (
           <div
-            className="absolute z-30 w-[330px] rounded-lg border border-[#2C2C26]/15 bg-white/95 backdrop-blur-md p-3 shadow-2xs pointer-events-none"
+            className="absolute z-30 w-[460px] rounded-xl border border-[#2C2C26]/15 bg-white/95 backdrop-blur-md p-5 shadow-2xs pointer-events-none"
             style={{
-              left: Math.max(8, Math.min(localX + 18, area.offsetWidth - 350)),
-              top: Math.max(8, Math.min(localY + 18, area.offsetHeight - 130)),
+              left: Math.max(8, Math.min(localX + 22, area.offsetWidth - 485)),
+              top: Math.max(8, Math.min(localY + 22, area.offsetHeight - 190)),
             }}
           >
-            <div className="flex gap-3">
-              <div className="w-16 h-22 flex-shrink-0 overflow-hidden rounded border border-[#2C2C26]/10 bg-[#FAF9F6]">
+            <div className="flex gap-5">
+              <div className="h-34 w-24 flex-shrink-0 overflow-hidden rounded-md border border-[#2C2C26]/10 bg-[#FAF9F6]">
                 <BookCover
                   url={hoveredBook.nb.book.cover}
                   title={hoveredBook.nb.book.title}
@@ -478,19 +478,19 @@ export default function RelationshipMap({ notebooks, highlights, onReanalyze, is
                 />
               </div>
               <div className="min-w-0 flex-1">
-                <p className="font-serif text-sm leading-tight text-[#2C2C26] line-clamp-2">
+                <p className="font-serif text-xl leading-snug text-[#2C2C26] line-clamp-2">
                   {cleanTitle(hoveredBook.nb.book.title)}
                 </p>
-                <p className="mt-1 font-mono text-[9px] text-[#2C2C26]/48 truncate">
+                <p className="mt-2 font-mono text-xs text-[#2C2C26]/52 truncate">
                   {hoveredBook.nb.book.author?.replace(/\[.*?\]/g, "") || "佚名"} · {hoveredBook.categoryTitle}
                 </p>
-                <div className="mt-3 grid grid-cols-2 gap-x-3 gap-y-1.5 text-[10px] text-[#2C2C26]/68">
+                <div className="mt-5 grid grid-cols-2 gap-x-5 gap-y-2.5 text-sm text-[#2C2C26]/70">
                   <span>阅读时间</span>
-                  <span className="text-right font-mono">{hoveredBook.readingMinutes >= 60 ? `${(hoveredBook.readingMinutes / 60).toFixed(1)}h` : `${hoveredBook.readingMinutes}min`}</span>
+                  <span className="text-right font-mono text-[#2C2C26]">{hoveredBook.readingMinutes >= 60 ? `${(hoveredBook.readingMinutes / 60).toFixed(1)}h` : `${hoveredBook.readingMinutes}min`}</span>
                   <span>划线个数</span>
-                  <span className="text-right font-mono">{hoveredBook.highlightCount}</span>
+                  <span className="text-right font-mono text-[#2C2C26]">{hoveredBook.highlightCount}</span>
                   <span>阅读时间点</span>
-                  <span className="text-right font-mono">{hoveredBook.estimated ? "约" : ""}{hoveredBook.year}.{String(hoveredBook.month + 1).padStart(2, "0")}</span>
+                  <span className="text-right font-mono text-[#2C2C26]">{hoveredBook.estimated ? "约" : ""}{hoveredBook.year}.{String(hoveredBook.month + 1).padStart(2, "0")}</span>
                 </div>
               </div>
             </div>
