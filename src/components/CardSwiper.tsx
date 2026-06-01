@@ -11,6 +11,7 @@ import BookCover from "./BookCover";
 import styleOneBg from "../../assets/风格一.png";
 import styleTwoBg from "../../assets/风格二.png";
 import styleThreeBg from "../../assets/风格三.png";
+import styleFourBg from "../../assets/风格四.png";
 
 interface CardSwiperProps {
   notebooks: WeReadNotebook[];
@@ -240,13 +241,17 @@ export default function CardSwiper({ notebooks, highlights }: CardSwiperProps) {
 
     if (cardStyle === "cleanse") {
       return (
-        <div className="relative flex h-full w-full items-center justify-center overflow-hidden bg-[#eceae3] text-[#231f1b]">
+        <div className="relative flex h-full w-full items-center justify-center overflow-hidden bg-[#15130f] text-white">
           <div className="relative aspect-[3/4] h-full max-h-full max-w-full">
-            <div className="absolute inset-0 bg-[#efeee8]"></div>
-            <div className="absolute inset-0 opacity-[0.32] memory-paper-grain"></div>
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_38%,rgba(255,255,255,0.56),transparent_36%),linear-gradient(180deg,rgba(255,255,255,0.28),rgba(214,211,199,0.22))]"></div>
+            <img
+              src={styleFourBg}
+              alt=""
+              className="absolute inset-0 h-full w-full object-cover"
+              draggable={false}
+            />
+            <div className="absolute inset-0 bg-black/10"></div>
 
-            <div className="absolute left-[31%] top-[25%] h-[25%] w-[38%] bg-[#f3f1ea] p-[3.2%] shadow-[0_12px_30px_rgba(42,36,27,0.14)] grayscale">
+            <div className="absolute left-1/2 top-[17%] h-[clamp(138px,28%,188px)] w-[clamp(102px,38%,150px)] -translate-x-1/2 bg-[#f3f1ea] p-[3.2%] shadow-[0_12px_30px_rgba(0,0,0,0.22)] grayscale">
               <div className="absolute left-1/2 top-[-8%] z-20 h-[10%] w-[26%] -translate-x-1/2 rotate-[-2deg] bg-[#d6d2c8]/70 shadow-[0_1px_3px_rgba(50,45,36,0.10)]"></div>
               <div className="relative h-full w-full overflow-hidden bg-[#dfddd5]">
                 <BookCover
@@ -260,10 +265,10 @@ export default function CardSwiper({ notebooks, highlights }: CardSwiperProps) {
             </div>
 
             <div
-              className="absolute left-[50%] top-[52%] w-[46%] -translate-x-1/2 text-center font-light tracking-[0.03em] text-[#171411]/88"
+              className="absolute left-1/2 top-[50%] w-4/5 -translate-x-1/2 text-center font-light tracking-[0.03em] text-white drop-shadow-[0_1px_8px_rgba(0,0,0,0.35)]"
               style={{ fontFamily: "'Songti SC', 'STSong', SimSun, serif" }}
             >
-              <p className={`max-h-[220px] overflow-y-auto scrollbar-none ${styleFourQuoteClass}`}>
+              <p className={`mx-auto max-h-[220px] w-full overflow-y-auto scrollbar-none ${styleFourQuoteClass}`}>
                 {activeHighlight.markText}
               </p>
               <div className="relative mx-auto mt-2 h-7 w-[72%]">
