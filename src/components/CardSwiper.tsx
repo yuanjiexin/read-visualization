@@ -12,13 +12,14 @@ import styleOneBg from "../../assets/风格一.png";
 import styleTwoBg from "../../assets/风格二.png";
 import styleThreeBg from "../../assets/风格三.png";
 import styleFourBg from "../../assets/风格四.png";
+import styleFiveBg from "../../assets/风格五.png";
 
 interface CardSwiperProps {
   notebooks: WeReadNotebook[];
   highlights: Array<WeReadHighlight & { bookName: string; bookAuthor: string; bookCover: string }>;
 }
 
-type CardStyle = "terra" | "portable" | "receipt" | "cleanse";
+type CardStyle = "terra" | "portable" | "receipt" | "cleanse" | "journey";
 
 const cardStyles: Array<{
   id: CardStyle;
@@ -28,6 +29,7 @@ const cardStyles: Array<{
   { id: "portable", title: "样式 2" },
   { id: "receipt", title: "样式 3" },
   { id: "cleanse", title: "样式 4" },
+  { id: "journey", title: "样式 5" },
 ];
 
 const styleSlots: Array<{ id?: CardStyle; title: string }> = Array.from({ length: 6 }, (_, index) => ({
@@ -165,6 +167,13 @@ export default function CardSwiper({ notebooks, highlights }: CardSwiperProps) {
     : activeHighlight.markText.length > 90
     ? "text-[12.5px] leading-[1.72]"
     : "text-[14px] leading-[1.78]";
+  const styleFiveQuoteClass = activeHighlight.markText.length > 220
+    ? "text-[10px] leading-[1.52]"
+    : activeHighlight.markText.length > 150
+    ? "text-[11px] leading-[1.56]"
+    : activeHighlight.markText.length > 90
+    ? "text-[12px] leading-[1.62]"
+    : "text-[13px] leading-[1.68]";
 
   const renderStyledCard = () => {
     if (cardStyle === "portable") {
@@ -271,6 +280,43 @@ export default function CardSwiper({ notebooks, highlights }: CardSwiperProps) {
               </div>
             </div>
           </div>
+        </div>
+      );
+    }
+
+    if (cardStyle === "journey") {
+      return (
+        <div
+          className="relative h-full w-full overflow-hidden bg-[#f2eee2] text-[#25221b]"
+          style={{ fontFamily: "'Playfair Display', 'EB Garamond', Georgia, serif" }}
+        >
+          <div className="absolute left-[8%] top-[7%] w-[39%]">
+            <h3 className="line-clamp-4 text-[28px] font-normal leading-[1.05] tracking-normal text-[#25221b]">
+              {activeHighlight.bookName}
+            </h3>
+            <div className="mt-8 flex items-center gap-3">
+              <div className="h-px w-9 bg-[#25221b]/55"></div>
+              <p className="line-clamp-2 font-mono text-[7.5px] font-medium uppercase tracking-[0.16em] text-[#25221b]/58">
+                {cleanAuthor}
+              </p>
+            </div>
+          </div>
+
+          <div className="absolute right-[8%] top-[30%] w-[39%] text-left">
+            <p className={`max-h-[220px] overflow-y-auto scrollbar-none font-serif text-[#25221b]/80 ${styleFiveQuoteClass}`}>
+              {activeHighlight.markText}
+            </p>
+            <p className="mt-7 font-mono text-[7.5px] uppercase tracking-[0.18em] text-[#25221b]/45">
+              {recordedDate}
+            </p>
+          </div>
+
+          <img
+            src={styleFiveBg}
+            alt=""
+            className="absolute left-1/2 top-[68%] h-[23%] w-[84%] -translate-x-1/2 object-cover"
+            draggable={false}
+          />
         </div>
       );
     }
