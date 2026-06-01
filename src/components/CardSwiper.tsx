@@ -314,7 +314,8 @@ export default function CardSwiper({ notebooks, highlights }: CardSwiperProps) {
           <img
             src={styleFiveBg}
             alt=""
-            className="absolute right-0 top-[73%] h-[18%] w-[86%] object-contain object-right-bottom"
+            className="absolute right-0 top-[73%] h-[18%] w-[86%] object-cover"
+            style={{ objectPosition: "50% 40%" }}
             draggable={false}
           />
         </div>
