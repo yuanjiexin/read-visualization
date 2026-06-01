@@ -16,10 +16,11 @@ import {
 interface SettingsPanelProps {
   onRefresh: () => void;
   isLoading: boolean;
+  initiallyOpen?: boolean;
 }
 
-export default function SettingsPanel({ onRefresh, isLoading }: SettingsPanelProps) {
-  const [isOpen, setIsOpen] = useState(false);
+export default function SettingsPanel({ onRefresh, isLoading, initiallyOpen = false }: SettingsPanelProps) {
+  const [isOpen, setIsOpen] = useState(initiallyOpen);
   const [apiKey, setApiKey] = useState(getStoredApiKey());
   const [installCommand, setInstallCommand] = useState(getStoredSkillInstallCommand());
   const [pasteText, setPasteText] = useState("");

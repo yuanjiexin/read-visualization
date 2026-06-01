@@ -256,9 +256,7 @@ export default function App() {
   const [tab, setTab] = useState<"canvas" | "swiper">("canvas");
 
   // Dual mode datasource state
-  const [mode, setMode] = useState<DataMode>(() => {
-    return (localStorage.getItem("weread_active_mode") as DataMode) || "obsidian";
-  });
+  const [mode, setMode] = useState<DataMode>("weread");
   const [showObsidianModal, setShowObsidianModal] = useState<boolean>(false);
 
   // State elements
@@ -786,7 +784,7 @@ export default function App() {
           </div>
 
           {mode === "weread" && (
-            <SettingsPanel onRefresh={handleWeReadSettingsRefresh} isLoading={loading} />
+            <SettingsPanel onRefresh={handleWeReadSettingsRefresh} isLoading={loading} initiallyOpen />
           )}
         </div>
       </header>
