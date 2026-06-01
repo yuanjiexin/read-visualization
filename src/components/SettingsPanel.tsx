@@ -64,7 +64,7 @@ export default function SettingsPanel({ onRefresh, isLoading, initiallyOpen = fa
   };
 
   return (
-    <div className="relative z-[99]" id="settings-panel">
+    <div className="relative z-[140]" id="settings-panel">
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 px-3 py-2 bg-white hover:bg-[#2C2C26]/5 text-[#2C2C26] border border-[#2C2C26]/10 rounded-md shadow-sm font-sans text-sm transition-all duration-300 cursor-pointer"

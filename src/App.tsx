@@ -670,7 +670,7 @@ export default function App() {
     <div className="w-screen h-screen flex flex-col font-sans text-ink-dark bg-[#FAF9F6]">
       
       {/* Top Desk Bar */}
-      <header className="h-14 border-b border-[#2C2C26]/10 bg-white/40 backdrop-blur-md flex items-center justify-between px-6 z-50 shadow-2xs flex-shrink-0">
+      <header className="h-14 border-b border-[#2C2C26]/10 bg-white/40 backdrop-blur-md flex items-center justify-between px-6 z-[120] shadow-2xs flex-shrink-0">
         <div className="flex items-center gap-5">
           <div className="flex flex-col">
             <h1 className="font-serif font-normal text-sm md:text-base tracking-tight text-[#2C2C26] flex items-center gap-1.5 leading-none">
@@ -793,7 +793,7 @@ export default function App() {
       <div className="flex-1 flex overflow-hidden relative bg-[#FAF9F6]">
         
         {loading ? (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#FAF9F6]/95 z-50 font-sans">
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#FAF9F6]/95 z-40 font-sans">
             <div className="relative">
               <Compass className="w-12 h-12 text-[#2C2C26]/40 animate-spin" />
               <div className="absolute inset-0 flex items-center justify-center text-[10px] text-[#2C2C26] font-normal font-serif">
@@ -808,7 +808,7 @@ export default function App() {
             </p>
           </div>
         ) : error ? (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#FAF9F6] z-50 text-center p-6_font-sans">
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#FAF9F6] z-40 text-center p-6_font-sans">
             <AlertCircle className="w-14 h-14 text-red-600/60 mb-4" />
             <h3 className="font-serif font-normal text-lg text-ink-dark mb-1">读书数据获取失败</h3>
             <p className="text-xs text-[#2C2C26]/70 max-w-sm leading-relaxed mb-6 font-sans">
