@@ -167,12 +167,12 @@ export default function CardSwiper({ notebooks, highlights }: CardSwiperProps) {
   const recordedDate = new Date(activeHighlight.createTime * 1000).toISOString().split("T")[0];
   const cleanAuthor = activeHighlight.bookAuthor?.replace(/\[.*?\]/, "").trim() || "佚名";
   const styleFourQuoteClass = activeHighlight.markText.length > 220
-    ? "text-[8.5px] leading-[1.58]"
+    ? "text-[10px] leading-[1.62]"
     : activeHighlight.markText.length > 150
-    ? "text-[9.5px] leading-[1.6]"
+    ? "text-[11px] leading-[1.66]"
     : activeHighlight.markText.length > 90
-    ? "text-[10.5px] leading-[1.65]"
-    : "text-[12px] leading-[1.72]";
+    ? "text-[12.5px] leading-[1.72]"
+    : "text-[14px] leading-[1.78]";
 
   const renderStyledCard = () => {
     if (cardStyle === "portable") {
@@ -242,7 +242,7 @@ export default function CardSwiper({ notebooks, highlights }: CardSwiperProps) {
     if (cardStyle === "cleanse") {
       return (
         <div className="relative flex h-full w-full items-center justify-center overflow-hidden bg-[#15130f] text-white">
-          <div className="relative aspect-[3/4] h-full max-h-full max-w-full">
+          <div className="relative h-full w-full">
             <img
               src={styleFourBg}
               alt=""
@@ -272,8 +272,8 @@ export default function CardSwiper({ notebooks, highlights }: CardSwiperProps) {
                 {activeHighlight.markText}
               </p>
               <div className="relative mx-auto mt-2 h-7 w-[72%]">
-                <div className="absolute left-[8%] top-1 h-[1.5px] w-[80%] -rotate-3 bg-[#cf4e4e]/82"></div>
-                <div className="absolute left-[22%] top-3.5 h-[1.5px] w-[58%] rotate-6 bg-[#cf4e4e]/56"></div>
+                <div className="absolute left-[8%] top-1 h-[1.5px] w-[80%] -rotate-3 bg-white/82"></div>
+                <div className="absolute left-[22%] top-3.5 h-[1.5px] w-[58%] rotate-6 bg-white/58"></div>
               </div>
             </div>
           </div>
