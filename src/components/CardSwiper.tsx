@@ -241,14 +241,16 @@ export default function CardSwiper({ notebooks, highlights }: CardSwiperProps) {
 
     if (cardStyle === "cleanse") {
       return (
-        <div className="relative flex h-full w-full items-center justify-center overflow-hidden bg-[#15130f] text-white">
-          <div className="relative h-full w-full">
-            <img
-              src={styleFourBg}
-              alt=""
-              className="absolute left-1/2 top-1/2 h-[112%] w-[150%] -translate-x-1/2 -translate-y-1/2 object-fill"
-              draggable={false}
-            />
+        <div className="relative flex h-full w-full items-center justify-center overflow-hidden bg-[#4f654f] text-white">
+          <div
+            className="relative h-full w-full bg-[#4f654f]"
+            style={{
+              backgroundImage: `url(${styleFourBg})`,
+              backgroundPosition: "50% 50%",
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "240% 116%"
+            }}
+          >
             <div className="absolute inset-0 bg-black/15"></div>
 
             <div className="absolute left-1/2 top-[17%] h-[clamp(138px,28%,188px)] w-[clamp(102px,38%,150px)] -translate-x-1/2 bg-[#f3f1ea] p-[3.2%] shadow-[0_12px_30px_rgba(0,0,0,0.22)] grayscale">
