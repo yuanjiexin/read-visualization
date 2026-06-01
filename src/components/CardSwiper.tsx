@@ -290,19 +290,19 @@ export default function CardSwiper({ notebooks, highlights }: CardSwiperProps) {
           className="relative h-full w-full overflow-hidden bg-[#f2eee2] text-[#25221b]"
           style={{ fontFamily: "'Playfair Display', 'EB Garamond', Georgia, serif" }}
         >
-          <div className="absolute left-[8%] top-[7%] w-[39%]">
+          <div className="absolute left-[8%] top-[7%] w-2/3">
             <h3 className="line-clamp-4 text-[28px] font-normal leading-[1.05] tracking-normal text-[#25221b]">
               {activeHighlight.bookName}
             </h3>
             <div className="mt-8 flex items-center gap-3">
               <div className="h-px w-9 bg-[#25221b]/55"></div>
-              <p className="line-clamp-2 font-mono text-[7.5px] font-medium uppercase tracking-[0.16em] text-[#25221b]/58">
+              <p className="truncate font-mono text-[7.5px] font-medium uppercase tracking-[0.16em] text-[#25221b]/58">
                 {cleanAuthor}
               </p>
             </div>
           </div>
 
-          <div className="absolute right-[8%] top-[30%] w-[39%] text-left">
+          <div className="absolute right-[8%] top-[30%] w-[52%] text-left">
             <p className={`max-h-[220px] overflow-y-auto scrollbar-none font-serif text-[#25221b]/80 ${styleFiveQuoteClass}`}>
               {activeHighlight.markText}
             </p>
@@ -314,7 +314,7 @@ export default function CardSwiper({ notebooks, highlights }: CardSwiperProps) {
           <img
             src={styleFiveBg}
             alt=""
-            className="absolute left-1/2 top-[68%] h-[23%] w-[84%] -translate-x-1/2 object-cover"
+            className="absolute right-0 top-[70%] h-[18%] w-[86%] object-cover"
             draggable={false}
           />
         </div>
