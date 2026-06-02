@@ -166,15 +166,43 @@ function shouldRetryWithoutJsonMode(payload: any): boolean {
   return /response_format|text\.format|json_object|unsupported|unknown parameter|invalid parameter|not support/.test(message);
 }
 
+function describeEndpoint(endpoint: string): string {
+  try {
+    const url = new URL(endpoint);
+    return `${url.protocol}//${url.host}${url.pathname}`;
+  } catch {
+    return endpoint ? "[invalid endpoint URL]" : "[empty endpoint]";
+  }
+}
+
+function describeNetworkError(error: any, endpoint: string): string {
+  const cause = error?.cause;
+  const parts = [
+    error?.message || String(error),
+    cause?.code ? `code=${cause.code}` : "",
+    cause?.errno ? `errno=${cause.errno}` : "",
+    cause?.hostname ? `host=${cause.hostname}` : "",
+    cause?.address ? `address=${cause.address}` : "",
+    cause?.port ? `port=${cause.port}` : "",
+    cause?.message ? `cause=${cause.message}` : ""
+  ].filter(Boolean);
+  return `模型端点连接失败（${describeEndpoint(endpoint)}）：${parts.join("; ")}`;
+}
+
 async function requestAnalysisModel(endpoint: string, headers: Record<string, string>, body: any, signal: AbortSignal) {
-  const response = await fetch(endpoint, {
-    method: "POST",
-    headers,
-    body: JSON.stringify(body),
-    signal
-  });
-  const payload = await response.json().catch(() => ({}));
-  return { response, payload };
+  try {
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(body),
+      signal
+    });
+    const payload = await response.json().catch(() => ({}));
+    return { response, payload };
+  } catch (error: any) {
+    if (error?.name === "AbortError") throw error;
+    throw new Error(describeNetworkError(error, endpoint));
+  }
 }
 
 export async function callConfiguredAnalysisApi(config: any, prompt: string): Promise<any> {
