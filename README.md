@@ -33,15 +33,6 @@ npm run dev
 
 默认服务地址为 `http://localhost:3000`。
 
-## 环境变量
-
-服务端 Gemini 分析能力会读取：
-
-```bash
-GEMINI_API_KEY=""
-```
-
-本项目不会在仓库中保存真实 API Key。请把真实密钥放在本地 `.env.local`、部署平台的环境变量，或在应用设置面板中手动填写。
 
 ## 常用命令
 
