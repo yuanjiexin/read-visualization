@@ -424,22 +424,17 @@ export async function fetchBookNotes(bookId: string): Promise<WeReadBookNotesRes
  * Fetch AI Synthesized Personality/Mindmap from our fast lazy Gemini proxy
  */
 export async function fetchAiAnalysis(books: any[], highlights: any[]): Promise<any> {
-  try {
-    const analysisConfig = getStoredAnalysisApiConfig();
-    const response = await fetch("/api/weread/analyze", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ books, highlights, analysisConfig })
-    });
-    if (!response.ok) {
-      throw new Error(`Analyze server error: ${response.status}`);
-    }
-    return await response.json();
-  } catch (error) {
-    console.error("fetchAiAnalysis failed, processing locally.", error);
-    // Simple local generator mapping as final fallback
-    return getFallbackAiAnalysis(books, highlights);
+  const analysisConfig = getStoredAnalysisApiConfig();
+  const response = await fetch("/api/weread/analyze", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ books, highlights, analysisConfig })
+  });
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(result?.error || result?.message || `Analyze server error: ${response.status}`);
   }
+  return result;
 }
 
 export async function testAnalysisApiConfig(config: AnalysisApiConfig): Promise<{ ok: boolean; model: string; message?: string }> {

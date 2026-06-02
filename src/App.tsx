@@ -271,6 +271,7 @@ export default function App() {
   const [analysisModel, setAnalysisModel] = useState<string>(() => getStoredAnalysisApiConfig().model || "本地语义分析");
   const [analysisConnected, setAnalysisConnected] = useState<boolean>(false);
   const [analysisRetrying, setAnalysisRetrying] = useState<boolean>(false);
+  const [analysisError, setAnalysisError] = useState<string | null>(null);
   const [rightPanelCollapsed, setRightPanelCollapsed] = useState<boolean>(false);
   const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
   const dataCacheRef = useRef<Partial<Record<DataMode, CachedModeData>>>({});
@@ -358,6 +359,7 @@ export default function App() {
 
     try {
       setAnalysisRetrying(true);
+      setAnalysisError(null);
       if (modeRef.current === targetMode) {
         setAnalysisConnected(false);
       }
@@ -402,6 +404,12 @@ export default function App() {
       saveCachedData(targetMode, nextSnapshot);
       if (modeRef.current === targetMode) {
         applyCachedData(nextSnapshot);
+      }
+    } catch (error: any) {
+      if (runId === analysisRunRef.current) {
+        const message = error?.message || "分析模型请求失败，请检查模型配置后重试。";
+        setAnalysisError(message);
+        setAnalysisConnected(false);
       }
     } finally {
       if (runId === analysisRunRef.current) {
@@ -627,6 +635,7 @@ export default function App() {
   const handleAnalysisConfigSaved = (config: AnalysisApiConfig, connected: boolean) => {
     setAnalysisModel(config.model || "未命名模型");
     setAnalysisConnected(connected);
+    setAnalysisError(null);
   };
 
   const retryAnalysis = async () => {
@@ -862,7 +871,7 @@ export default function App() {
                       <span className="max-w-[260px] truncate text-[#2C2C26]/85" title={analysisModel}>
                         分析模型：{analysisModel}
                       </span>
-                      {!analysisConnected && notebooks.length > 0 && (
+                      {notebooks.length > 0 && (
                         <button
                           type="button"
                           onClick={retryAnalysis}
@@ -875,6 +884,14 @@ export default function App() {
                         </button>
                       )}
                     </div>
+                    {analysisError && (
+                      <div className="bg-red-50/95 backdrop-blur-md px-3.5 py-1.5 border border-red-200 rounded-full text-[10px] font-medium font-sans flex items-center gap-2 shadow-2xs max-w-[520px]">
+                        <AlertCircle className="w-3 h-3 text-red-600 flex-shrink-0" />
+                        <span className="truncate text-red-700" title={analysisError}>
+                          分析失败：{analysisError}
+                        </span>
+                      </div>
+                    )}
                     </div>
                   </div>
 
