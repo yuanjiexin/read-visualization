@@ -1,4 +1,6 @@
 const ANALYSIS_TIMEOUT_MS = 55_000;
+const ANALYSIS_BOOK_LIMIT = 80;
+const ANALYSIS_HIGHLIGHT_LIMIT = 28;
 const MIN_VALID_READING_YEAR = 2000;
 const FUTURE_READING_TOLERANCE_MS = 24 * 60 * 60 * 1000;
 const MBTI_TYPES = new Set([
@@ -115,11 +117,24 @@ function extractJsonText(text: string): string {
   return cleaned;
 }
 
-function buildApiRequest(format: ReturnType<typeof detectApiFormat>, config: any, prompt: string) {
+function parseAnalysisJson(text: string): any {
+  const jsonText = extractJsonText(text);
+  try {
+    return JSON.parse(jsonText);
+  } catch (error: any) {
+    throw new Error(`分析模型返回内容不是可解析 JSON：${error?.message || "JSON parse failed"}`);
+  }
+}
+
+function buildApiRequest(format: ReturnType<typeof detectApiFormat>, config: any, prompt: string, forceJson = true) {
   if (format === "responses") {
     return {
       headers: { Authorization: `Bearer ${config.apiKey}`, "Content-Type": "application/json" },
-      body: { model: config.model, input: [{ role: "user", content: [{ type: "input_text", text: prompt }] }] }
+      body: {
+        model: config.model,
+        input: [{ role: "user", content: [{ type: "input_text", text: prompt }] }],
+        ...(forceJson ? { text: { format: { type: "json_object" } } } : {})
+      }
     };
   }
 
@@ -132,8 +147,34 @@ function buildApiRequest(format: ReturnType<typeof detectApiFormat>, config: any
 
   return {
     headers: { Authorization: `Bearer ${config.apiKey}`, "Content-Type": "application/json" },
-    body: { model: config.model, messages: [{ role: "user", content: prompt }] }
+    body: {
+      model: config.model,
+      messages: [{ role: "user", content: prompt }],
+      temperature: 0.3,
+      ...(forceJson ? { response_format: { type: "json_object" } } : {})
+    }
   };
+}
+
+function shouldRetryWithoutJsonMode(payload: any): boolean {
+  const message = [
+    payload?.error?.message,
+    payload?.message,
+    payload?.errmsg,
+    typeof payload === "string" ? payload : ""
+  ].filter(Boolean).join(" ").toLowerCase();
+  return /response_format|text\.format|json_object|unsupported|unknown parameter|invalid parameter|not support/.test(message);
+}
+
+async function requestAnalysisModel(endpoint: string, headers: Record<string, string>, body: any, signal: AbortSignal) {
+  const response = await fetch(endpoint, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+    signal
+  });
+  const payload = await response.json().catch(() => ({}));
+  return { response, payload };
 }
 
 export async function callConfiguredAnalysisApi(config: any, prompt: string): Promise<any> {
@@ -143,27 +184,25 @@ export async function callConfiguredAnalysisApi(config: any, prompt: string): Pr
 
   const endpoint = normalizeAnalysisEndpoint(config.endpoint, config.model);
   const format = detectApiFormat(endpoint);
-  const { headers, body } = buildApiRequest(format, config, prompt);
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), ANALYSIS_TIMEOUT_MS);
 
   try {
-    const response = await fetch(endpoint, {
-      method: "POST",
-      headers,
-      body: JSON.stringify(body),
-      signal: controller.signal
-    });
-    const payload = await response.json().catch(() => ({}));
+    let { headers, body } = buildApiRequest(format, config, prompt, true);
+    let { response, payload } = await requestAnalysisModel(endpoint, headers, body, controller.signal);
+    if (!response.ok && shouldRetryWithoutJsonMode(payload)) {
+      ({ headers, body } = buildApiRequest(format, config, prompt, false));
+      ({ response, payload } = await requestAnalysisModel(endpoint, headers, body, controller.signal));
+    }
     if (!response.ok) {
       throw new Error(payload?.error?.message || payload?.message || `分析模型请求失败：${response.status}`);
     }
     const text = extractResponsesText(payload);
     if (!text) throw new Error("分析模型返回为空");
-    return JSON.parse(extractJsonText(text));
+    return parseAnalysisJson(text);
   } catch (error: any) {
     if (error?.name === "AbortError") {
-      throw new Error(`分析模型请求超过 ${Math.round(ANALYSIS_TIMEOUT_MS / 1000)} 秒未返回`);
+      throw new Error(`分析模型请求超过 ${Math.round(ANALYSIS_TIMEOUT_MS / 1000)} 秒未返回，请减少样本或换更快的模型`);
     }
     throw error;
   } finally {
@@ -238,7 +277,9 @@ function buildHighlightSamples(books: any[], highlights: any[], limit = 80): str
 }
 
 export function buildReadingAnalysisPrompt(books: any[], highlights: any[]): string {
-  const normalizedBooks = (books || []).slice(0, 220).map((item: any, index: number) => {
+  const requiredYears = getRequiredAnalysisYears(books);
+  const selectedBooks = (books || []).slice(0, ANALYSIS_BOOK_LIMIT);
+  const normalizedBooks = selectedBooks.map((item: any, index: number) => {
     const book = item?.book || item;
     return {
       title: book?.title || item?.title || "未命名书籍",
@@ -249,21 +290,20 @@ export function buildReadingAnalysisPrompt(books: any[], highlights: any[]): str
       bookmarkCount: item?.bookmarkCount || 0
     };
   });
-  const requiredYears = getRequiredAnalysisYears(books);
   const bookSummaries = normalizedBooks
-    .map((b) => `【${b.title}】作者:${b.author}; 分类:${b.category}; 年份:${b.year}; 划线:${b.bookmarkCount}; 笔记:${b.noteCount}`)
+    .map((b) => `《${compactText(b.title, 24)}》/${compactText(b.author, 12)}/${compactText(b.category, 12)}/${b.year}/划线${b.bookmarkCount}/笔记${b.noteCount}`)
     .join("\n");
-  const quoteSamples = buildHighlightSamples(books, highlights, 80).join("\n");
+  const quoteSamples = buildHighlightSamples(selectedBooks, highlights, ANALYSIS_HIGHLIGHT_LIMIT).join("\n");
 
-  return `你是一位阅读 MBTI 分析师和思想图谱编辑。请根据用户每年的书籍、分类、阅读时间、划线与笔记，推断标准四字母 MBTI 类型，并提炼思想聚类。
+  return `你是阅读 MBTI 分析师。根据书籍与划线，推断年度阅读人格并提炼思想聚类。
 
-只返回严格 JSON，不要 Markdown，不要解释。JSON 结构必须是：
+只返回 JSON，不要 Markdown，不要解释。结构：
 {
   "yearlyPersonality": [
-    { "year": 2026, "title": "INFJ", "annualQuestion": "一句年度问题", "description": "一段中文解释" }
+    { "year": 2026, "title": "INFJ", "annualQuestion": "一句年度问题", "description": "60字以内中文解释" }
   ],
   "thoughtClusters": [
-    { "keyword": "主题词", "books": ["书名1", "书名2"], "thoughtQuote": "一句洞察或划线摘录" }
+    { "keyword": "主题词", "books": ["书名1", "书名2"], "thoughtQuote": "一句洞察" }
   ]
 }
 
@@ -272,6 +312,7 @@ export function buildReadingAnalysisPrompt(books: any[], highlights: any[]): str
 2. title 必须是标准 MBTI：INTJ、INTP、ENTJ、ENTP、INFJ、INFP、ENFJ、ENFP、ISTJ、ISFJ、ESTJ、ESFJ、ISTP、ISFP、ESTP、ESFP。
 3. thoughtClusters 返回 4 到 6 个。
 4. 所有文案使用中文，具体、有判断，不要泛泛而谈。
+5. 若样本只覆盖部分年份，也必须为第 1 条列出的每个年份输出一项。
 
 书籍数据：
 ${bookSummaries || "暂无书籍"}
