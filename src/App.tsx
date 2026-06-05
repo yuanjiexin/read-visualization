@@ -6,7 +6,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Compass, BookOpen, Quote, RefreshCw, AlertCircle, ChevronLeft, ChevronRight, FileText, FolderSync, PlusCircle, Trash2, BrainCircuit } from "lucide-react";
 import { PreferCategory, WeReadNotebook, WeReadHighlight, WeReadOverallStats } from "./types";
-import { fetchNotebooks, fetchOverallStats, fetchBookNotes, fetchAiAnalysis, getStoredAnalysisApiConfig, AnalysisApiConfig } from "./api";
+import { fetchNotebooks, fetchOverallStats, fetchBookNotes, fetchAiAnalysis, getStoredAnalysisApiConfig, getStoredApiKey, AnalysisApiConfig } from "./api";
 import InfiniteCanvas from "./components/InfiniteCanvas";
 import SettingsPanel from "./components/SettingsPanel";
 import AnalysisSettingsPanel from "./components/AnalysisSettingsPanel";
@@ -274,6 +274,7 @@ export default function App() {
   const [analysisError, setAnalysisError] = useState<string | null>(null);
   const [rightPanelCollapsed, setRightPanelCollapsed] = useState<boolean>(false);
   const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
+  const shouldShowWeReadOnboardingError = mode === "weread" && !getStoredApiKey().trim();
   const dataCacheRef = useRef<Partial<Record<DataMode, CachedModeData>>>({});
   const modeRef = useRef<DataMode>(mode);
   const analysisRunRef = useRef(0);
@@ -819,9 +820,13 @@ export default function App() {
         ) : error ? (
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#FAF9F6] z-40 text-center p-6_font-sans">
             <AlertCircle className="w-14 h-14 text-red-600/60 mb-4" />
-            <h3 className="font-serif font-normal text-lg text-ink-dark mb-1">读书数据获取失败</h3>
+            <h3 className="font-serif font-normal text-lg text-ink-dark mb-1">
+              {shouldShowWeReadOnboardingError ? "需要添加微信读书skill api" : "读书数据获取失败"}
+            </h3>
             <p className="text-xs text-[#2C2C26]/70 max-w-sm leading-relaxed mb-6 font-sans">
-              {error}
+              {shouldShowWeReadOnboardingError
+                ? "前往微信读书右上角设置，找到微信读书skill，找到快速配置2:将api复制到本网页右上角弹窗的API密钥中（注意 API 不要透露给任何人，本网站也不会存储）"
+                : error}
             </p>
             <button
               onClick={() => loadData(mode)}
